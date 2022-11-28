@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.nio.file.Path;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -11,6 +13,5 @@ public class GameDTOFull {
     private String name;
     private long companyId;
     private long publisherId;
-    private byte[] photo;
-    private char[] description;
+    private Path path;
 }

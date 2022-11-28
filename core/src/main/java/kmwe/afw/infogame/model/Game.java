@@ -22,16 +22,14 @@ public class Game {
     private long id;
 
     @NotNull
-    @Column(name = "name")
+    @Column(name = "name", unique = true)
     private String name;
 
-    @NotNull
     @ManyToOne
     @JoinTable(name = "games_companies", schema = "public", joinColumns = @JoinColumn(name = "game_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "company_id", referencedColumnName = "id"))
     private Company company;
 
-    @NotNull
     @ManyToOne
     @JoinTable(name = "games_publisher", schema = "public", joinColumns = @JoinColumn(name = "game_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "publisher_id", referencedColumnName = "id"))

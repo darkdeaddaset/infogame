@@ -9,6 +9,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CompanyDTO {
     private String name;
-    private long companyId;
-    private long publisherId;
+    private String country;
 }

@@ -1,7 +1,8 @@
 package kmwe.afw.infogame.service.abstracts;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kmwe.afw.infogame.game.GameDTOFull;
+import kmwe.afw.infogame.company.CompanyDTO;
+import kmwe.afw.infogame.game.GameDTO;
 import kmwe.afw.infogame.mapper.CompanyMapper;
 import kmwe.afw.infogame.mapper.GameMapper;
 import kmwe.afw.infogame.mapper.UserMapper;
@@ -19,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.persistence.EntityNotFoundException;
-import javax.servlet.http.HttpServletRequest;
 import java.nio.file.Path;
 import java.util.Optional;
 
@@ -48,35 +48,23 @@ public abstract class AbstractAdmin extends AbstractUser implements AdminFunctio
     }
 
     @Override
-    public ResponseEntity<CompanyInfo> getCompany(String name, HttpServletRequest request) {
+    public ResponseEntity<CompanyInfo> getCompany(String name) {
         Company company = companyRepository.getCompaniesByName(name)
                 .orElseThrow(() -> new EntityNotFoundException("Компания не найдена"));
 
         Path path = fileStorageService.loadImageAsResource(name);
-
-        String contentType = null;
-
-        /*try {
-            contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }*/
-        /*return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(contentType))
-                .body(resource);*/
-
-
         return ResponseEntity.ok()
-                .body(new CompanyInfo(company.getName(), path));
+                .body(new CompanyInfo(company.getName(), path, company.getCountry()));
     }
 
     @Override
-    public ResponseEntity<String> uploadGameInfo(GameDTOFull gameDTOFull) {
-        return Optional.of(gameDTOFull)
-                .map(gameMapper::getFromDTOOfFull)
+    public ResponseEntity<String> uploadGameInfo(GameDTO gameDTO, MultipartFile logoGame) {
+        writeLogoInfFile(logoGame, gameDTO.getName());
+        return Optional.of(gameDTO)
+                .map(gameMapper::getFromDTO)
                 .map(saveGame -> {
-                    if (gameDTOFull.getName().isEmpty() || gameDTOFull.getName().isBlank()
-                    || gameDTOFull.getCompanyId() == 0 || gameDTOFull.getPublisherId() == 0) {
+                    if (gameDTO.getName().isEmpty() || gameDTO.getName().isBlank()
+                    || gameDTO.getCompanyId() == 0 || gameDTO.getPublisherId() == 0) {
                         return new ResponseEntity<>("Некорректные данные", HttpStatus.BAD_REQUEST);
                     } else {
                         gameRepository.save(saveGame);
@@ -86,12 +74,10 @@ public abstract class AbstractAdmin extends AbstractUser implements AdminFunctio
     }
 
     @Override
-    public ResponseEntity<String> uploadCompanyInfo(String name, MultipartFile logo) {
-        getInfoOfCompany(logo, name);
+    public ResponseEntity<String> uploadCompanyInfo(CompanyDTO companyDTO, MultipartFile logoCompany) {
+        writeLogoInfFile(logoCompany, companyDTO.getName());
 
-        Company company = new Company();
-        company.setName(name);
-
+        Company company = companyMapper.getFromDTO(companyDTO);
         companyRepository.save(company);
 
         return new ResponseEntity<>("Компания успешно сохранена", HttpStatus.CREATED);
@@ -109,7 +95,7 @@ public abstract class AbstractAdmin extends AbstractUser implements AdminFunctio
                 }).orElseThrow(() -> new EntityNotFoundException("Невозможно создать страницу компании"));*/
     }
 
-    private ResponseEntity<String> getInfoOfCompany(MultipartFile file, String name) {
+    private ResponseEntity<String> writeLogoInfFile(MultipartFile file, String name) {
         String fileName = fileStorageService.storeFile(file, name);
 
         if (FilenameUtils.getExtension(fileName).equals("PNG") || FilenameUtils.getExtension(fileName).equals("png")

@@ -19,12 +19,16 @@ public class Company {
     private long id;
 
     @NotNull
-    @Column(name = "name", unique = true, nullable = false)
+    @Column(name = "name", unique = true)
     private String name;
 
-    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "company")
+    @NotNull
+    @Column(name = "country")
+    private String country;
+
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "company")
     private Set<Game> developGames;
 
-    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "publisher")
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "publisher")
     private Set<Game> publishingGames;
 }

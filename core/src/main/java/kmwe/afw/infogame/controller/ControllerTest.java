@@ -1,6 +1,8 @@
 package kmwe.afw.infogame.controller;
 
+import kmwe.afw.infogame.company.CompanyDTO;
 import kmwe.afw.infogame.company.CompanyDTOFull;
+import kmwe.afw.infogame.game.GameDTO;
 import kmwe.afw.infogame.game.GameDTOFull;
 import kmwe.afw.infogame.payload.CompanyInfo;
 import kmwe.afw.infogame.service.AdminService;
@@ -19,7 +21,6 @@ import java.io.IOException;
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 public class ControllerTest {
     private final AdminService adminService;
-    //private final UserService userService;
 
     @GetMapping("/t")
     public String test() {
@@ -27,17 +28,27 @@ public class ControllerTest {
     }
 
     @PostMapping("/game")
-    public ResponseEntity<String> uploadGameInfo(@RequestBody GameDTOFull gameDTOFull) {
-        return adminService.uploadGame(gameDTOFull);
+    public ResponseEntity<String> uploadGameInfo(@ModelAttribute GameDTO gameDTO, @RequestParam MultipartFile logoGame) {
+        return adminService.uploadGame(gameDTO, logoGame);
     }
 
     @PostMapping("/company")
-    public ResponseEntity<String> uploadCompanyInfo(@RequestParam String name, @RequestParam MultipartFile logo) {
-        return adminService.uploadCompany(name, logo);
+    public ResponseEntity<String> uploadCompanyInfo(@ModelAttribute CompanyDTO companyDTO, @RequestParam MultipartFile logoCompany) {
+        return adminService.uploadCompany(companyDTO, logoCompany);
     }
 
     @GetMapping("/company/{name}")
-    public ResponseEntity<CompanyInfo> getLogoCompany(@PathVariable("name") String name, HttpServletRequest request) {
-        return adminService.getInfoCompany(name, request);
+    public ResponseEntity<CompanyInfo> getLogoCompany(@PathVariable("name") String name) {
+        return adminService.getInfoCompany(name);
+    }
+
+    @DeleteMapping("company/{name}")
+    public ResponseEntity<String> deleteCompany(@PathVariable("name") String name) {
+        return adminService.deleteCompanyService(name);
+    }
+
+    @DeleteMapping("game/{name}")
+    public ResponseEntity<String> deleteGame(@PathVariable("name") String name) {
+        return adminService.deleteGameService(name);
     }
 }

@@ -12,4 +12,5 @@ import java.nio.file.Path;
 public class CompanyInfo {
     private final String name;
     private final Path logo;
+    private final String country;
 }

@@ -11,5 +11,4 @@ public class GameDTO {
     private String name;
     private long companyId;
     private long publisherId;
-    private byte[] photo;
 }
