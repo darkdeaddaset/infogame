@@ -19,3 +19,6 @@ spring:
 
   liquibase:
     enabled: off
+
+images:
+  upload-dir: /home/q/users/test/

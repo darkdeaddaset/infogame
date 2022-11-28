@@ -37,14 +37,6 @@ public class Game {
             inverseJoinColumns = @JoinColumn(name = "publisher_id", referencedColumnName = "id"))
     private Company publisher;
 
-    @Lob
-    @Column(name = "photo")
-    private byte[] photo;
-
-    @Lob
-    @Column(name = "description")
-    private char[] description;
-
     @ElementCollection(targetClass = Genre.class)
     @CollectionTable(name = "genres_games", schema = "public", joinColumns = @JoinColumn(name = "game_id"))
     private Set<Genre> genres;

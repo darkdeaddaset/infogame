@@ -19,14 +19,8 @@ public class Company {
     private long id;
 
     @NotNull
-    @Column(name = "name")
+    @Column(name = "name", unique = true, nullable = false)
     private String name;
-
-    @Lob
-    private byte[] logo;
-
-    @Lob
-    private char[] description;
 
     @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "company")
     private Set<Game> developGames;
