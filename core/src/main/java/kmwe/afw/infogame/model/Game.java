@@ -25,6 +25,11 @@ public class Game {
     @Column(name = "name", unique = true)
     private String name;
 
+    @Lob
+    @NotNull
+    @Column(name = "description")
+    private String description;
+
     @ManyToOne
     @JoinTable(name = "games_companies", schema = "public", joinColumns = @JoinColumn(name = "game_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "company_id", referencedColumnName = "id"))

@@ -2,6 +2,7 @@ package kmwe.afw.infogame.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kmwe.afw.infogame.company.CompanyDTO;
+import kmwe.afw.infogame.company.CompanyDTOFull;
 import kmwe.afw.infogame.game.GameDTO;
 import kmwe.afw.infogame.game.GameDTOFull;
 import kmwe.afw.infogame.mapper.CompanyMapper;
@@ -9,15 +10,19 @@ import kmwe.afw.infogame.mapper.GameMapper;
 import kmwe.afw.infogame.mapper.UserMapper;
 import kmwe.afw.infogame.model.Company;
 import kmwe.afw.infogame.model.Game;
-import kmwe.afw.infogame.payload.CompanyInfo;
 import kmwe.afw.infogame.repository.CompanyRepository;
 import kmwe.afw.infogame.repository.GameRepository;
 import kmwe.afw.infogame.repository.UserRepository;
 import kmwe.afw.infogame.service.abstracts.AbstractUser;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,13 +51,13 @@ public class UserServiceImpl extends AbstractUser implements UserService {
     }
 
     @Override
-    public ResponseEntity<CompanyInfo> getCompany(String name) {
+    public ResponseEntity<CompanyDTOFull> getCompany(String name) {
         Company company = companyRepository.getCompaniesByName(name)
                 .orElseThrow(() -> new EntityNotFoundException("Компания не найдена"));
 
-        Path path = fileStorageService.loadImageAsResource(name);
+        Path path = fileStorageService.loadImageAsReference(name);
         return ResponseEntity.ok()
-                .body(new CompanyInfo(company.getName(), path, company.getCountry()));
+                .body(new CompanyDTOFull(company.getName(), path, company.getCountry(), company.getDescription()));
     }
 
     @Override
@@ -60,24 +65,31 @@ public class UserServiceImpl extends AbstractUser implements UserService {
         Game game = gameRepository.getGameByName(name)
                 .orElseThrow(() -> new EntityNotFoundException("Игра не найдена"));
 
-        Path path = fileStorageService.loadImageAsResource(name);
+        Path path = fileStorageService.loadImageAsReference(name);
         return ResponseEntity.ok()
-                .body(new GameDTOFull(game.getName(), game.getCompany().getId(), game.getPublisher().getId(), path));
+                .body(new GameDTOFull(game.getName(), game.getCompany().getId(), game.getPublisher().getId(), path, game.getDescription()));
     }
 
     @Override
-    public GameDTOFull getInfoGame(String name) {
-        return gameRepository.getGameByName(name)
-                .map(gameMapper::getFromModelForFull)
-                .orElseThrow(() -> new EntityNotFoundException("Игра: " + name + " не найдена"));
-    }
+    public ResponseEntity<Resource> getImage(String name, HttpServletRequest request) {
+        Resource resource = fileStorageService.loadImageAsResource(name);
 
-    @Override
-    public List<GameDTOFull> getAllGamesOfCompany(String name) {
-        return companyRepository.getCompaniesByName(name)
-                .map(gameRepository::getGameByCompany)
-                .map(gameMapper::getAllGameDTOFull)
-                .orElseThrow(() -> new EntityNotFoundException("Игры от компании: " + name + " не найдены"));
+        String typeContent = null;
+
+        try {
+            typeContent = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        if (typeContent == null) {
+            typeContent = "application/octet-stream";
+        }
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(typeContent))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                .body(resource);
     }
 
     @Override

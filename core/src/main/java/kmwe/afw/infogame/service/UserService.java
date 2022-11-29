@@ -1,20 +1,19 @@
 package kmwe.afw.infogame.service;
 
 import kmwe.afw.infogame.company.CompanyDTO;
+import kmwe.afw.infogame.company.CompanyDTOFull;
 import kmwe.afw.infogame.game.GameDTO;
 import kmwe.afw.infogame.game.GameDTOFull;
-import kmwe.afw.infogame.model.Company;
-import kmwe.afw.infogame.payload.CompanyInfo;
+import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface UserService {
-    ResponseEntity<CompanyInfo> getCompany(String name);
+    ResponseEntity<CompanyDTOFull> getCompany(String name);
     ResponseEntity<GameDTOFull> getGame(String name);
-    GameDTOFull getInfoGame(String name);
-    List<GameDTOFull> getAllGamesOfCompany(String name);
-    //Company getInfoCompany(String name);
+    ResponseEntity<Resource> getImage(String name, HttpServletRequest request);
     List<GameDTO> getAllGames();
     List<CompanyDTO> getAllCompanies();
 }

@@ -7,7 +7,6 @@ import kmwe.afw.infogame.game.GameDTOFull;
 import kmwe.afw.infogame.mapper.CompanyMapper;
 import kmwe.afw.infogame.mapper.GameMapper;
 import kmwe.afw.infogame.mapper.UserMapper;
-import kmwe.afw.infogame.payload.CompanyInfo;
 import kmwe.afw.infogame.repository.CompanyRepository;
 import kmwe.afw.infogame.repository.GameRepository;
 import kmwe.afw.infogame.repository.UserRepository;
@@ -23,13 +22,8 @@ public class AdminServiceImpl extends AbstractAdmin implements AdminService {
     }
 
     @Override
-    public ResponseEntity<CompanyInfo> getInfoCompany(String name) {
-        return getCompany(name);
-    }
-
-    @Override
-    public ResponseEntity<String> uploadGame(GameDTO gameDTO, MultipartFile logoGame) {
-        return uploadGameInfo(gameDTO, logoGame);
+    public ResponseEntity<String> uploadGame(GameDTOFull gameDTOFull, MultipartFile logoGame) {
+        return uploadGameInfo(gameDTOFull, logoGame);
     }
 
     @Override

@@ -3,11 +3,11 @@ package kmwe.afw.infogame.service.abstracts;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kmwe.afw.infogame.company.CompanyDTO;
 import kmwe.afw.infogame.game.GameDTO;
+import kmwe.afw.infogame.game.GameDTOFull;
 import kmwe.afw.infogame.mapper.CompanyMapper;
 import kmwe.afw.infogame.mapper.GameMapper;
 import kmwe.afw.infogame.mapper.UserMapper;
 import kmwe.afw.infogame.model.Company;
-import kmwe.afw.infogame.payload.CompanyInfo;
 import kmwe.afw.infogame.repository.CompanyRepository;
 import kmwe.afw.infogame.repository.GameRepository;
 import kmwe.afw.infogame.repository.UserRepository;
@@ -20,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.persistence.EntityNotFoundException;
-import java.nio.file.Path;
 import java.util.Optional;
 
 @Component
@@ -48,34 +47,24 @@ public abstract class AbstractAdmin extends AbstractUser implements AdminFunctio
     }
 
     @Override
-    public ResponseEntity<CompanyInfo> getCompany(String name) {
-        Company company = companyRepository.getCompaniesByName(name)
-                .orElseThrow(() -> new EntityNotFoundException("Компания не найдена"));
-
-        Path path = fileStorageService.loadImageAsResource(name);
-        return ResponseEntity.ok()
-                .body(new CompanyInfo(company.getName(), path, company.getCountry()));
-    }
-
-    @Override
-    public ResponseEntity<String> uploadGameInfo(GameDTO gameDTO, MultipartFile logoGame) {
-        writeLogoInfFile(logoGame, gameDTO.getName());
-        return Optional.of(gameDTO)
-                .map(gameMapper::getFromDTO)
+    public ResponseEntity<String> uploadGameInfo(GameDTOFull gameDTOFull, MultipartFile logoGame) {
+        writeLogoInFile(logoGame, gameDTOFull.getName());
+        return Optional.of(gameDTOFull)
+                .map(gameMapper::getFromDTOOfFull)
                 .map(saveGame -> {
-                    if (gameDTO.getName().isEmpty() || gameDTO.getName().isBlank()
-                    || gameDTO.getCompanyId() == 0 || gameDTO.getPublisherId() == 0) {
+                    if (gameDTOFull.getName().isEmpty() || gameDTOFull.getName().isBlank()
+                    || gameDTOFull.getCompanyId() == 0 || gameDTOFull.getPublisherId() == 0) {
                         return new ResponseEntity<>("Некорректные данные", HttpStatus.BAD_REQUEST);
                     } else {
                         gameRepository.save(saveGame);
-                        return new ResponseEntity<>("Игра добавлена", HttpStatus.OK);
+                        return new ResponseEntity<>("Игра добавлена", HttpStatus.CREATED);
                     }
                 }).orElseThrow(() -> new EntityNotFoundException("Невозможно создать страницу игры"));
     }
 
     @Override
     public ResponseEntity<String> uploadCompanyInfo(CompanyDTO companyDTO, MultipartFile logoCompany) {
-        writeLogoInfFile(logoCompany, companyDTO.getName());
+        writeLogoInFile(logoCompany, companyDTO.getName());
 
         Company company = companyMapper.getFromDTO(companyDTO);
         companyRepository.save(company);
@@ -95,7 +84,7 @@ public abstract class AbstractAdmin extends AbstractUser implements AdminFunctio
                 }).orElseThrow(() -> new EntityNotFoundException("Невозможно создать страницу компании"));*/
     }
 
-    private ResponseEntity<String> writeLogoInfFile(MultipartFile file, String name) {
+    private ResponseEntity<String> writeLogoInFile(MultipartFile file, String name) {
         String fileName = fileStorageService.storeFile(file, name);
 
         if (FilenameUtils.getExtension(fileName).equals("PNG") || FilenameUtils.getExtension(fileName).equals("png")
@@ -105,7 +94,7 @@ public abstract class AbstractAdmin extends AbstractUser implements AdminFunctio
                     .path(fileName)
                     .toUriString();
 
-            return new ResponseEntity<>("Лого сохранено", HttpStatus.OK);
+            return new ResponseEntity<>("Лого сохранено", HttpStatus.CREATED);
         }
 
         return new ResponseEntity<>("Ошибка сохранения изображения", HttpStatus.BAD_REQUEST);

@@ -14,4 +14,5 @@ public class GameDTOFull {
     private long companyId;
     private long publisherId;
     private Path path;
+    private String description;
 }

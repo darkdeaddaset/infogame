@@ -3,11 +3,14 @@ package kmwe.afw.infogame.service;
 import kmwe.afw.infogame.properties.ImageStoriesProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -53,27 +56,34 @@ public class FileStorageServiceImpl implements FileStorageService{
         }
     }
 
-    public Path loadImageAsResource(String filename) {
+    @Override
+    public Path loadImageAsReference(String filename) {
         if (filename.contains(" ")) {
             filename = filename.replace(" ", "_");
         }
         String fileNameChanged = filename + ".png";
 
-        Path path = this.fileStorageLocation.resolve(fileNameChanged).normalize();
-        /*try {
-            System.out.println(path);
+        return this.fileStorageLocation.resolve(fileNameChanged).normalize();
+    }
+
+    @Override
+    public Resource loadImageAsResource(String name) {
+        if (name.contains(" ")) {
+            name = name.replace(" ", "_");
+        }
+        String fileNameChanged = name + ".png";
+
+        try {
+            Path path = this.fileStorageLocation.resolve(fileNameChanged).normalize();
             Resource resource = new UrlResource(path.toUri());
 
             if (resource.exists()) {
                 return resource;
             } else {
-                log.error("Изображение не может быть получено");
-                throw new RuntimeException("");
+                throw new RuntimeException("Файл не найден");
             }
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
-        }*/
-
-        return path;
+        }
     }
 }

@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 @Data
 @Entity
@@ -26,9 +26,14 @@ public class Company {
     @Column(name = "country")
     private String country;
 
+    @Lob
+    @NotNull
+    @Column(name = "description")
+    private String description;
+
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "company")
-    private Set<Game> developGames;
+    private List<Game> developGames;
 
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "publisher")
-    private Set<Game> publishingGames;
+    private List<Game> publishingGames;
 }

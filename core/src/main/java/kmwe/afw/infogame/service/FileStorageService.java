@@ -1,10 +1,12 @@
 package kmwe.afw.infogame.service;
 
+import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
 
 public interface FileStorageService {
     String storeFile(MultipartFile file, String name);
-    Path loadImageAsResource(String filename);
+    Path loadImageAsReference(String filename);
+    Resource loadImageAsResource(String filename);
 }
