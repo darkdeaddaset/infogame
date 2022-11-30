@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="kmve_afw" id="2">
+
+        <addForeignKeyConstraint baseTableName="games_companies"
+                                 baseColumnNames="company_id"
+                                 constraintName="fk_companies_games"
+                                 referencedTableName="company"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="games_companies"
+                                 baseColumnNames="game_id"
+                                 constraintName="fk_games_companies"
+                                 referencedTableName="games"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="games_publisher"
+                                 baseColumnNames="publisher_id"
+                                 constraintName="fk_publisher_games"
+                                 referencedTableName="company"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="games_publisher"
+                                 baseColumnNames="game_id"
+                                 constraintName="fk_games_publisher"
+                                 referencedTableName="games"
+                                 referencedColumnNames="id"/>
+
+        <createSequence sequenceName="hibernate_sequence"
+                        startValue="1" incrementBy="1"/>
+    </changeSet>
+</databaseChangeLog>

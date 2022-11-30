@@ -4,6 +4,7 @@ import kmwe.afw.infogame.company.CompanyDTO;
 import kmwe.afw.infogame.company.CompanyDTOFull;
 import kmwe.afw.infogame.model.Company;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface CompanyMapper {
@@ -12,4 +13,6 @@ public interface CompanyMapper {
 
     CompanyDTOFull getFromModelForFull(Company company);
     Company getFromDTOOfFull(CompanyDTOFull companyDTOFull);
+
+    void refreshFull(CompanyDTOFull companyDTOFull, @MappingTarget Company company);
 }

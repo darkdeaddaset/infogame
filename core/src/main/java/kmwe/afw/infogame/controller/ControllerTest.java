@@ -43,10 +43,10 @@ public class ControllerTest {
         return adminService.uploadGame(gameDTO, logoGame);
     }*/
 
-    @PostMapping("/company")
+    /*@PostMapping("/company")
     public ResponseEntity<String> uploadCompanyInfo(@ModelAttribute CompanyDTO companyDTO, @RequestParam MultipartFile logoCompany) {
         return adminService.uploadCompany(companyDTO, logoCompany);
-    }
+    }*/
 
     /*@GetMapping("/company/{name}")
     public ResponseEntity<CompanyInfo> getLogoCompany(@PathVariable("name") String name) {

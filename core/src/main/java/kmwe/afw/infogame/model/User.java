@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Entity
@@ -28,4 +29,7 @@ public class User {
     @NotNull
     @Column(name = "password")
     private String password;
+
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "author")
+    private List<Strategy> strategies;
 }

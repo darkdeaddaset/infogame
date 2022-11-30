@@ -1,8 +1,7 @@
 package kmwe.afw.infogame.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kmwe.afw.infogame.company.CompanyDTO;
-import kmwe.afw.infogame.game.GameDTO;
+import kmwe.afw.infogame.company.CompanyDTOFull;
 import kmwe.afw.infogame.game.GameDTOFull;
 import kmwe.afw.infogame.mapper.CompanyMapper;
 import kmwe.afw.infogame.mapper.GameMapper;
@@ -27,8 +26,18 @@ public class AdminServiceImpl extends AbstractAdmin implements AdminService {
     }
 
     @Override
-    public ResponseEntity<String> uploadCompany(CompanyDTO companyDTO, MultipartFile logoCompany) {
-        return uploadCompanyInfo(companyDTO, logoCompany);
+    public ResponseEntity<String> uploadCompany(CompanyDTOFull companyDTOFull, MultipartFile logoCompany) {
+        return uploadCompanyInfo(companyDTOFull, logoCompany);
+    }
+
+    @Override
+    public ResponseEntity<String> refreshCompany(String name, CompanyDTOFull companyDTOFull) {
+        return refreshCompanyInfo(name, companyDTOFull);
+    }
+
+    @Override
+    public ResponseEntity<String> refreshGame(String name, GameDTOFull gameDTOFull) {
+        return refreshGameInfo(name, gameDTOFull);
     }
 
     @Override

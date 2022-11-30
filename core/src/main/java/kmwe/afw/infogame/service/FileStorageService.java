@@ -9,4 +9,5 @@ public interface FileStorageService {
     String storeFile(MultipartFile file, String name);
     Path loadImageAsReference(String filename);
     Resource loadImageAsResource(String filename);
+    String deleteImage(String name);
 }

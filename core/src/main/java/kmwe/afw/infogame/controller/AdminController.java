@@ -1,7 +1,6 @@
 package kmwe.afw.infogame.controller;
 
-import kmwe.afw.infogame.company.CompanyDTO;
-import kmwe.afw.infogame.game.GameDTO;
+import kmwe.afw.infogame.company.CompanyDTOFull;
 import kmwe.afw.infogame.game.GameDTOFull;
 import kmwe.afw.infogame.service.AdminService;
 import lombok.RequiredArgsConstructor;
@@ -21,17 +20,27 @@ public class AdminController {
     }
 
     @PostMapping("/company")
-    public ResponseEntity<String> uploadCompanyInfo(@ModelAttribute CompanyDTO companyDTO, @RequestParam MultipartFile logoCompany) {
-        return adminService.uploadCompany(companyDTO, logoCompany);
+    public ResponseEntity<String> uploadCompanyInfo(@ModelAttribute CompanyDTOFull companyDTOFull, @RequestParam MultipartFile logoCompany) {
+        return adminService.uploadCompany(companyDTOFull, logoCompany);
     }
 
-    @DeleteMapping("company/{name}")
-    public ResponseEntity<String> deleteCompany(@PathVariable("name") String name) {
-        return adminService.deleteCompanyService(name);
+    @PutMapping("/game/{name}")
+    public ResponseEntity<String> refreshGame(@PathVariable("name") String name, @RequestBody GameDTOFull gameDTOFull) {
+        return adminService.refreshGame(name, gameDTOFull);
+    }
+
+    @PutMapping("/company/{name}")
+    public ResponseEntity<String> refreshCompany(@PathVariable("name") String name, @RequestBody CompanyDTOFull companyDTOFull) {
+        return adminService.refreshCompany(name, companyDTOFull);
     }
 
     @DeleteMapping("game/{name}")
     public ResponseEntity<String> deleteGame(@PathVariable("name") String name) {
         return adminService.deleteGameService(name);
+    }
+
+    @DeleteMapping("company/{name}")
+    public ResponseEntity<String> deleteCompany(@PathVariable("name") String name) {
+        return adminService.deleteCompanyService(name);
     }
 }

@@ -5,6 +5,7 @@ import kmwe.afw.infogame.game.GameDTOFull;
 import kmwe.afw.infogame.model.Game;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 import java.util.List;
 
@@ -27,4 +28,6 @@ public interface GameMapper {
     GameDTOFull getFromModelForFull(Game game);
 
     List<GameDTOFull> getAllGameDTOFull(List<Game> games);
+
+    void refreshFull(GameDTOFull gameDTOFull, @MappingTarget Game game);
 }

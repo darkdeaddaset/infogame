@@ -1,20 +1,17 @@
-package kmwe.afw.infogame.game;
+package kmwe.afw.infogame.strategy;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.nio.file.Path;
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class GameDTOFull {
+public class StrategyDTO {
     private String name;
-    private long companyId;
-    private long publisherId;
-    private Path path;
+    private long authorId;
+    private long gameId;
     private String description;
 }

@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -43,4 +44,7 @@ public class Game {
     @ElementCollection(targetClass = Genre.class)
     @CollectionTable(name = "genres_games", schema = "public", joinColumns = @JoinColumn(name = "game_id"))
     private Set<Genre> genres;
+
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "game")
+    private List<Strategy> strategies;
 }

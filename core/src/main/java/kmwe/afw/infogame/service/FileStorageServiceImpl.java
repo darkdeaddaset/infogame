@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
@@ -84,6 +85,23 @@ public class FileStorageServiceImpl implements FileStorageService{
             }
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public String deleteImage(String name) {
+        if (name.contains(" ")) {
+            name = name.replace(" ", "_");
+        }
+        String fileNameChanged = name + ".png";
+
+        Path path = this.fileStorageLocation.resolve(fileNameChanged).normalize();
+        File file = new File(path.toUri());
+
+        if (file.delete()) {
+            return "Лого удалено";
+        } else {
+            return "Ошибка при удалении изображения";
         }
     }
 }

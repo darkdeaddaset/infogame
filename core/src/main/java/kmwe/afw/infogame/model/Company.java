@@ -31,9 +31,9 @@ public class Company {
     @Column(name = "description")
     private String description;
 
-    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "company")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "company")
     private List<Game> developGames;
 
-    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "publisher")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "publisher")
     private List<Game> publishingGames;
 }
