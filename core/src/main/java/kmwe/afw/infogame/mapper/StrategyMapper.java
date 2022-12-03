@@ -4,7 +4,6 @@ import kmwe.afw.infogame.model.Strategy;
 import kmwe.afw.infogame.strategy.StrategyDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.springframework.stereotype.Component;
 
 @Mapper(componentModel = "spring")
 public interface StrategyMapper {

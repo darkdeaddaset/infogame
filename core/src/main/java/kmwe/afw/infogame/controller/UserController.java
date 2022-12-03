@@ -1,11 +1,13 @@
 package kmwe.afw.infogame.controller;
 
+import com.github.fge.jsonpatch.JsonPatch;
 import kmwe.afw.infogame.company.CompanyDTO;
 import kmwe.afw.infogame.company.CompanyDTOFull;
 import kmwe.afw.infogame.game.GameDTO;
 import kmwe.afw.infogame.game.GameDTOFull;
 import kmwe.afw.infogame.service.UserService;
 import kmwe.afw.infogame.strategy.StrategyDTO;
+import kmwe.afw.infogame.user.UserDTOFull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
@@ -55,8 +57,23 @@ public class UserController {
         return userService.getStrategySearchForGame(gameName);
     }
 
-    @PostMapping("guide")
-    public ResponseEntity<String> createStrategy(StrategyDTO strategyDTO) {
+    @PostMapping("/guide")
+    public ResponseEntity<String> createStrategy(@RequestBody StrategyDTO strategyDTO) {
         return userService.createStrategy(strategyDTO);
+    }
+
+    @PutMapping("/me")
+    public ResponseEntity<String> updateUser(@RequestBody UserDTOFull userDTOFull) {
+        return userService.updateFullUser(userDTOFull);
+    }
+
+    @PatchMapping("/me")
+    public ResponseEntity<String> partialUser(JsonPatch jsonPatch, String login) {
+        return userService.partialUpdateUser(jsonPatch, login);
+    }
+
+    @DeleteMapping("/me")
+    public ResponseEntity<String> deleteUser(String login) {
+        return userService.deleteUser(login);
     }
 }

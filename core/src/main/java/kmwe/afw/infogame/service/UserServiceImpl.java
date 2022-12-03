@@ -119,9 +119,10 @@ public class UserServiceImpl extends AbstractUser implements UserService {
                 .map(saveStrategy -> {
                     if (strategyDTO.getName().isBlank() || strategyDTO.getName().isEmpty()
                     || strategyDTO.getDescription().isBlank() || strategyDTO.getDescription().isEmpty()
-                    || strategyDTO.getAuthorId() == 0 || strategyDTO.getGameId() == 0) {
+                    || strategyDTO.getGameId() == 0) {
                         return new ResponseEntity<>("Невалидные данные", HttpStatus.BAD_REQUEST);
                     }
+                    strategyRepository.save(saveStrategy);
                     return new ResponseEntity<>("Гайд был добавлен", HttpStatus.CREATED);
                 }).orElseThrow(() -> new EntityNotFoundException("Ошибка, неудалось создать гайд!"));
     }

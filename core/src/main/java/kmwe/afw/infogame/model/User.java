@@ -30,6 +30,6 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "author")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "author")
     private List<Strategy> strategies;
 }

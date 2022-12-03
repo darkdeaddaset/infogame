@@ -13,7 +13,6 @@ import java.util.Set;
 
 @Data
 @Entity
-@Builder
 @Table(name = "games", schema = "public")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,7 +21,7 @@ public class Game {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @NotNull
+    //@NotNull
     @Column(name = "name", unique = true)
     private String name;
 
@@ -45,6 +44,6 @@ public class Game {
     @CollectionTable(name = "genres_games", schema = "public", joinColumns = @JoinColumn(name = "game_id"))
     private Set<Genre> genres;
 
-    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "game")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "game")
     private List<Strategy> strategies;
 }

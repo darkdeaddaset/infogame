@@ -17,11 +17,9 @@ public class Strategy {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @NotNull
     @Column(name = "name", unique = true)
     private String name;
 
-    @NotNull
     @ManyToOne
     @JoinTable(name = "authors", schema = "public", joinColumns = @JoinColumn(name = "strategy_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))

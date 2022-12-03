@@ -5,6 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
     <changeSet author="kmve_afw" id="2">
+        <comment>Создание внешних ключей + последовательности</comment>
 
         <addForeignKeyConstraint baseTableName="games_companies"
                                  baseColumnNames="company_id"

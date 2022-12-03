@@ -5,6 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
     <changeSet author="kmve_afw" id="1">
+        <comment>Создание таблиц</comment>
 
         <createTable tableName="users">
             <column name="id" type="bigint" autoIncrement="true">
@@ -55,6 +56,9 @@
             <column name="name" type="varchar">
                 <constraints nullable="false" unique="true"/>
             </column>
+            <column name="description" type="text">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
 
         <createTable tableName="games_publisher">
@@ -72,6 +76,24 @@
             </column>
             <column name="game_id" type="bigint">
                 <constraints nullable="false" deleteCascade="true"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="authors">
+            <column name="user_id" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+            <column name="strategy_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="games_guide">
+            <column name="game_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="strategy_id" type="bigint">
+                <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
